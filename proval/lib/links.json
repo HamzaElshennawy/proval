@@ -1,0 +1,303 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "vlrggapi",
+        "description": "An Unofficial REST API for [vlr.gg](https://www.vlr.gg/), a site for Valorant Esports match and news coverage. Made by [axsddlr](https://github.com/axsddlr)",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/news": {
+            "get": {
+                "summary": "Vlr News",
+                "operationId": "VLR_news_news_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "summary": "Vlr Stats",
+                "description": "Get VLR stats with query parameters.\n\nregion shortnames:\n\n    \"na\": \"north-america\",\n\n    \"eu\": \"europe\",\n\n    \"ap\": \"asia-pacific\",\n\n    \"sa\": \"latin-america\",\n\n    \"jp\": \"japan\",\n\n    \"oce\": \"oceania\",\n\n    \"mn\": \"mena\"",
+                "operationId": "VLR_stats_stats_get",
+                "parameters": [
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Region shortname",
+                            "title": "Region"
+                        },
+                        "description": "Region shortname"
+                    },
+                    {
+                        "name": "timespan",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Timespan (30, 60, 90, or all)",
+                            "title": "Timespan"
+                        },
+                        "description": "Timespan (30, 60, 90, or all)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rankings": {
+            "get": {
+                "summary": "Vlr Ranks",
+                "description": "Get VLR rankings for a specific region.\n\nregion shortnames:\n\n    \"na\": \"north-america\",\n\n    \"eu\": \"europe\",\n\n    \"ap\": \"asia-pacific\",\n\n    \"la\": \"latin-america\",\n\n    \"la-s\": \"la-s\",\n\n    \"la-n\": \"la-n\",\n\n    \"oce\": \"oceania\",\n\n    \"kr\": \"korea\",\n\n    \"mn\": \"mena\",\n\n    \"gc\": \"game-changers\",\n\n    \"br\": \"Brazil\",\n\n    \"cn\": \"china\",\n\n    \"jp\": \"japan\",\n\n    \"col\": \"collegiate\",",
+                "operationId": "VLR_ranks_rankings_get",
+                "parameters": [
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Region shortname",
+                            "title": "Region"
+                        },
+                        "description": "Region shortname"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/match": {
+            "get": {
+                "summary": "Vlr Match",
+                "description": "query parameters:\n\n    \"upcoming\": upcoming matches,\n\n    \"live_score\": live match scores,\n\n    \"results\": match results,\n\n\nPage Range Options:\n- num_pages: Number of pages from page 1 (ignored if from_page/to_page specified)\n- from_page: Starting page number (1-based, optional)\n- to_page: Ending page number (1-based, inclusive, optional)\n\nAdditional parameters for robust scraping:\n- max_retries: Maximum retry attempts per failed page (1-5, default: 3)\n- request_delay: Delay between requests in seconds (0.5-5.0, default: 1.0)\n- timeout: Request timeout in seconds (10-120, default: 30)\n\nExamples:\n- /match?q=results&num_pages=5 (scrapes pages 1-5)\n- /match?q=results&from_page=10&to_page=15 (scrapes pages 10-15)\n- /match?q=results&from_page=5&num_pages=3 (scrapes pages 5-7)",
+                "operationId": "VLR_match_match_get",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Q"
+                        }
+                    },
+                    {
+                        "name": "num_pages",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 600,
+                            "minimum": 1,
+                            "description": "Number of pages to scrape (default: 1)",
+                            "default": 1,
+                            "title": "Num Pages"
+                        },
+                        "description": "Number of pages to scrape (default: 1)"
+                    },
+                    {
+                        "name": "from_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 600,
+                            "minimum": 1,
+                            "description": "Starting page number (1-based, optional)",
+                            "title": "From Page"
+                        },
+                        "description": "Starting page number (1-based, optional)"
+                    },
+                    {
+                        "name": "to_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 600,
+                            "minimum": 1,
+                            "description": "Ending page number (1-based, inclusive, optional)",
+                            "title": "To Page"
+                        },
+                        "description": "Ending page number (1-based, inclusive, optional)"
+                    },
+                    {
+                        "name": "max_retries",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 5,
+                            "minimum": 1,
+                            "description": "Maximum retry attempts per page (default: 3)",
+                            "default": 3,
+                            "title": "Max Retries"
+                        },
+                        "description": "Maximum retry attempts per page (default: 3)"
+                    },
+                    {
+                        "name": "request_delay",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "maximum": 5,
+                            "minimum": 0.5,
+                            "description": "Delay between requests in seconds (default: 1.0)",
+                            "default": 1,
+                            "title": "Request Delay"
+                        },
+                        "description": "Delay between requests in seconds (default: 1.0)"
+                    },
+                    {
+                        "name": "timeout",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 120,
+                            "minimum": 10,
+                            "description": "Request timeout in seconds (default: 30)",
+                            "default": 30,
+                            "title": "Timeout"
+                        },
+                        "description": "Request timeout in seconds (default: 30)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "summary": "Health",
+                "operationId": "health_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
