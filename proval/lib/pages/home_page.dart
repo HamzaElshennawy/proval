@@ -631,8 +631,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       bottomNavigationBar: Container(
-        height: 85,
-        margin: const EdgeInsets.only(bottom: 5, left: 10, right: 10),
+        height: 91,
+        margin: const EdgeInsets.only(bottom: 15, left: 10, right: 10),
         decoration: BoxDecoration(
           color: Colors.transparent,
           boxShadow: [
