@@ -22,7 +22,6 @@ class _MatchsPageState extends State<MatchsPage> {
   Widget build(BuildContext context) {
     final matchProvider = context.watch<MatchProvider>();
     final matches = matchProvider.matches;
-    print('matches: $matches'); // <-- Add this line
 
     return Scaffold(
       appBar: AppBar(title: const Text("Matchs Page")),

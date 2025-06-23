@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:proval/models/match.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MatchDetailsPage extends StatelessWidget {
   final Match match;
 
   const MatchDetailsPage({super.key, required this.match});
+
+  Future<void> _openLink(String url) async {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
+    }
+    final uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+      webViewConfiguration: const WebViewConfiguration(enableJavaScript: true),
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +30,9 @@ class MatchDetailsPage extends StatelessWidget {
       required String label,
       required String? value,
     }) {
-      if (value == null || value.isEmpty || value == "N/A")
+      if (value == null || value.isEmpty || value == "N/A") {
         return const SizedBox.shrink();
+      }
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
@@ -53,112 +69,144 @@ class MatchDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Teams and Score
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Team 1
-                Column(
-                  children: [
-                    if (match.team1Logo != null)
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(match.team1Logo!),
-                        radius: 36,
-                        backgroundColor: Colors.grey[200],
-                      ),
-                    const SizedBox(height: 8),
-                    Text(
-                      match.team1 ?? "",
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    if (match.flag1 != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          match.flag1!,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                  ],
+            // Teams and Score Card
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              color: theme.colorScheme.surfaceVariant.withOpacity(0.85),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 28,
+                  horizontal: 16,
                 ),
-                const SizedBox(width: 28),
-                // Score
-                Column(
+                child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 24,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Text(
-                        "${match.score1 ?? "-"} : ${match.score2 ?? "-"}",
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    if (match.currentMap != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          "Map: ${match.currentMap!} (Map #${match.mapNumber ?? "?"})",
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[700],
+                    // Team 1
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          if (match.team1Logo != null)
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(match.team1Logo!),
+                              radius: 36,
+                              backgroundColor: Colors.grey[200],
+                            ),
+                          const SizedBox(height: 10),
+                          Text(
+                            match.team1 ?? "",
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ),
-                    if (match.timeUntilMatch != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          match.timeUntilMatch!,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(width: 28),
-                // Team 2
-                Column(
-                  children: [
-                    if (match.team2Logo != null)
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(match.team2Logo!),
-                        radius: 36,
-                        backgroundColor: Colors.grey[200],
-                      ),
-                    const SizedBox(height: 8),
-                    Text(
-                      match.team2 ?? "",
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                          if (match.flag1 != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                match.flag1!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    if (match.flag2 != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          match.flag2!,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                    // Score and Map
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 28,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withOpacity(
+                                0.13,
+                              ),
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Text(
+                              "${match.score1 ?? "-"} : ${match.score2 ?? "-"}",
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                          if (match.currentMap != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Map: ${match.currentMap!} ${match.mapNumber != null ? "(#${match.mapNumber})" : ""}",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          if (match.timeUntilMatch != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                match.timeUntilMatch!,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
+                    ),
+                    // Team 2
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          if (match.team2Logo != null)
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(match.team2Logo!),
+                              radius: 36,
+                              backgroundColor: Colors.grey[200],
+                            ),
+                          const SizedBox(height: 10),
+                          Text(
+                            match.team2 ?? "",
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (match.flag2 != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                match.flag2!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ],
+              ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 30),
             // Event & Tournament
             if (match.matchEvent != null)
               infoRow(
@@ -169,10 +217,13 @@ class MatchDetailsPage extends StatelessWidget {
             if (match.tournamentIcon != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Image.network(
-                  match.tournamentIcon!,
-                  height: 48,
-                  fit: BoxFit.contain,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    match.tournamentIcon!,
+                    height: 48,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             if (match.tournamentName != null)
@@ -207,28 +258,21 @@ class MatchDetailsPage extends StatelessWidget {
               ),
             if (match.matchPage != null)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: InkWell(
-                  onTap: () {
-                    // Use url_launcher to open the link if desired
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.open_in_new, color: theme.colorScheme.primary),
-                      const SizedBox(width: 6),
-                      Text(
-                        "View on VLR.gg",
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
+                padding: const EdgeInsets.only(top: 12),
+                child: ElevatedButton.icon(
+                  onPressed: () => _openLink("vlr.gg${match.matchPage!}"),
+                  icon: const Icon(Icons.open_in_new),
+                  label: const Text("View on VLR.gg"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.inversePrimary,
+                    foregroundColor: theme.colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
             // Map Details (if available)
             if (match.team1RoundCt != null ||
                 match.team1RoundT != null ||
@@ -237,10 +281,10 @@ class MatchDetailsPage extends StatelessWidget {
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   child: Column(
                     children: [
                       Text(
@@ -249,7 +293,7 @@ class MatchDetailsPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

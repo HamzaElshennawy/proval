@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proval/pages/home_page.dart';
-import 'package:proval/providers/api.dart';
+import 'package:proval/providers/api_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:proval/providers/match_provider.dart';
 
@@ -9,7 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MatchProvider()),
-        ChangeNotifierProvider(create: (context) => API()),
+        ChangeNotifierProvider(create: (context) => ApiProvider()),
       ],
       child: const MyApp(),
     ),
