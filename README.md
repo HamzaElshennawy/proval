@@ -57,5 +57,5 @@ MIT License. See [LICENSE](LICENSE) for details.
 ## 🙏 Credits
 
 - [VLR.gg](https://vlr.gg) for esports data and news.
-- [vlrggapi.vercel.app](https://vlrggapi.vercel.app) for the open API.
+- [vlrggapi.vercel.app](https://vlrggapi.vercel.app) for the open API. @axsddlr Auther of the API.
 - Flutter & Dart community.
