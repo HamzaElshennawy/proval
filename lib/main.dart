@@ -11,6 +11,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => MatchProvider()),
         ChangeNotifierProvider(create: (context) => ApiProvider()),
       ],
+      
       child: const MyApp(),
     ),
   );
