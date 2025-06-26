@@ -34,11 +34,17 @@ lib/
   main.dart      # App entry point
 ```
 
+## Installation
+
+Download the APK from [GitHub](https://github.com/HamzaElshennawy/proval/releases/tag/Prerelease).
+
 ---
 
 ## 📝 Notes
 
 - If you see "No matches found" or "Server timeout", the API may be down or blocked. Try again later.
+- This app is not affiliated with Riot Games or VLR.gg. It uses the open API provided by [vlrggapi.vercel.app](https://vlrggapi.vercel.app).
+- This app is still in development. If you encounter any issues, please report them on the [GitHub Issues page](https://github.com/HamzaElshennawy/proval/issues).
 
 ---
 
