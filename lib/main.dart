@@ -13,6 +13,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ApiProvider()),
         ChangeNotifierProvider(create: (context) => MatchProvider()),
       ],
+      
       child: const MyApp(),
     ),
   );
