@@ -97,10 +97,15 @@ class _NewsPageState extends State<NewsPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
                       gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primary.withOpacity(0.09),
-                          theme.colorScheme.surface.withOpacity(0.98),
-                        ],
+                        colors: theme.brightness == Brightness.dark
+                            ? [
+                                theme.colorScheme.primary.withOpacity(0.09),
+                                theme.colorScheme.surface.withOpacity(0.98),
+                              ]
+                            : [
+                                theme.colorScheme.primary.withOpacity(0.4),
+                                theme.colorScheme.primary.withOpacity(0.4),
+                              ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),

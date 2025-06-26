@@ -6,6 +6,7 @@ import 'package:proval/providers/match_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:proval/pages/match_details_page.dart';
 import 'package:proval/pages/news_page.dart';
+import 'package:proval/pages/settings_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -224,10 +225,15 @@ class _HomePageState extends State<HomePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
                       gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primary.withOpacity(0.09),
-                          theme.colorScheme.surface.withOpacity(0.98),
-                        ],
+                        colors: theme.brightness == Brightness.dark
+                            ? [
+                                theme.colorScheme.primary.withOpacity(0.09),
+                                theme.colorScheme.surface.withOpacity(0.98),
+                              ]
+                            : [
+                                theme.colorScheme.primary.withOpacity(0.4),
+                                theme.colorScheme.primary.withOpacity(0.4),
+                              ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -446,11 +452,20 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsPage()),
+              );
+            },
+          ),
         ],
       ),
       body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
